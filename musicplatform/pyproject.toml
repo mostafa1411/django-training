@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "musicplatform"
+version = "0.1.0"
+description = ""
+authors = ["mostafa1411 <mostafa.abdullah1411@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+django = "^4.1.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
