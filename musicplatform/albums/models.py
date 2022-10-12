@@ -10,4 +10,4 @@ class Album(models.Model):
     creation_time = models.DateTimeField(default=timezone.now)
     release_time = models.DateTimeField(blank=False)
     cost = models.DecimalField(max_digits=6, decimal_places=2, null=False, blank=False)
-    artist = models.OneToOneField(Artist, on_delete=models.PROTECT, default='')
+    artist = models.ForeignKey(Artist, on_delete=models.CASCADE, default='')
