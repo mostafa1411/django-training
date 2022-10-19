@@ -1,10 +1,11 @@
 from django.db import models
+from model_utils.models import TimeStampedModel
 
 
 # Create your models here.
 
 
-class Album(models.Model):
+class Album(TimeStampedModel):
     name = models.CharField(max_length=50, default=u'New Album')
     release_time = models.DateTimeField(blank=False)
     cost = models.DecimalField(max_digits=6, decimal_places=2, null=False, blank=False)

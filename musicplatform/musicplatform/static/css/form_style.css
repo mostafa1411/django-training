@@ -23,7 +23,7 @@ form {
     flex-direction: column;
 }
 
-input {
+input, select {
     background-color: #000;
     color: #fff;
     width: 100%;
