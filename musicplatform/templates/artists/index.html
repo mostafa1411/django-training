@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+</head>
+<body>
+    {% for artist in artists %}
+        <div>
+            <p>id: {{ forloop.counter }}</p>
+            <p>Stage name: {{ artist.stage_name }}</p>
+            <p>Social: {{ artist.social_link }}</p>
+            <p>Albums:</p>
+            {% for album in artist.album_set.all %}
+                <div>
+                    <p>id: {{ forloop.counter }}</p>
+                    <p>Name: {{ album.name }}</p>
+                    <p>Creation Time: {{ album.created }}</p>
+                    <p>Release Time: {{ album.release_time }}</p>
+                    <p>Cost: {{ album.cost }}</p>
+                </div>
+            {% endfor %}
+        </div>
+        <hr>
+    {% endfor %}
+</body>
+</html>
