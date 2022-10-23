@@ -1,20 +1,28 @@
 from django.shortcuts import render
-from .forms import ArtistFrom
+from .forms import ArtistForm
 from .models import Artist, Album
-
+from django.views import View
 
 # Create your views here.
 
-def index(request):
-    context = {'artists': Artist.objects.all()}
-    return render(request, 'artists/index.html', context)
+
+class IndexView(View):
+    def get(self, request):
+        context = {'artists': Artist.objects.all()}
+        return render(request, 'artists/index.html', context)
 
 
-def add_artist(request):
-    if request.method == "POST":
-        artist = ArtistFrom(request.POST)
+class ArtistCreateView(View):
+    template_name = 'artists/add_artist.html'
+
+    def get(self, request):
+        context = {'form': ArtistForm}
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        artist = ArtistForm(request.POST)
         if artist.is_valid():
             artist.save()
 
-    context = {'form': ArtistFrom}
-    return render(request, 'artists/add_artist.html', context)
+        context = {'form': ArtistForm}
+        return render(request, self.template_name, context)

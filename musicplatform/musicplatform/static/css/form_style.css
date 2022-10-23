@@ -48,3 +48,8 @@ input, select {
 .submit-btn:hover {
     background-color: #005f5f;
 }
+
+.error {
+    color: #f00;
+    font-weight: 600;
+}
