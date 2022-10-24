@@ -1,7 +1,8 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from .models import Album
+from django.utils.decorators import method_decorator
+
 from .forms import AlbumForm
-from django.views import View
 from django.views.generic.edit import CreateView
 
 
@@ -10,6 +11,7 @@ from django.views.generic.edit import CreateView
 class AlbumCreateView(CreateView):
     template_name = 'albums/add_album.html'
 
+    @method_decorator(login_required)
     def get(self, request):
         context = {'form': AlbumForm}
         return render(request, self.template_name, context)
