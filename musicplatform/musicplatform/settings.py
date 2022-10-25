@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'albums.apps.AlbumsConfig',
     'users.apps.UsersConfig',
     'imagekit',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
