@@ -4,7 +4,8 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.response import Response
 from knox.models import AuthToken
 from knox.views import LoginView
-from .serializers import UserSerializer, RegistrationSerializer
+from .serializers import RegistrationSerializer
+from users.serializers import UserSerializer
 
 # Create your views here.
 
