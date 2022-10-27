@@ -40,8 +40,10 @@ INSTALLED_APPS = [
     'artists.apps.ArtistsConfig',
     'albums.apps.AlbumsConfig',
     'users.apps.UsersConfig',
+    'authentication.apps.AuthenticationConfig',
     'imagekit',
     'rest_framework',
+    'knox',
 ]
 
 MIDDLEWARE = [
@@ -139,3 +141,13 @@ MEDIA_URL = 'media/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'users.User'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        'knox.auth.TokenAuthentication',
+    ]
+}
