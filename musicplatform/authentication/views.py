@@ -1,4 +1,3 @@
-from django.contrib import messages
 from django.contrib.auth import login
 from rest_framework import generics, status, permissions
 from rest_framework.authtoken.serializers import AuthTokenSerializer
@@ -42,9 +41,3 @@ class LoginUserView(LoginView):
                 "bio": user.bio,
             }
         }, status=status.HTTP_200_OK)
-
-
-# class LogoutUserView(View):
-#     def get(self, request):
-#         logout(request)
-#         return redirect('login')
