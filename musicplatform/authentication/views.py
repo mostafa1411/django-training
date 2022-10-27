@@ -1,8 +1,10 @@
 from django.contrib import messages
-from rest_framework import generics
-from rest_framework import status
+from django.contrib.auth import login
+from rest_framework import generics, status, permissions
+from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.response import Response
 from knox.models import AuthToken
+from knox.views import LoginView
 from .serializers import UserSerializer, RegistrationSerializer
 
 # Create your views here.
@@ -22,29 +24,26 @@ class RegisterUserView(generics.GenericAPIView):
                 }, status=status.HTTP_201_CREATED)
 
 
-# class LoginUserView(View):
-#     template_name = 'users/login.html'
-#     loginForm = AuthenticationForm()
-#
-#     def get(self, request):
-#         context = {'form': self.loginForm}
-#         return render(request, self.template_name, context)
-#
-#     def post(self, request):
-#         username = request.POST.get('username')
-#         password = request.POST.get('password')
-#
-#         user = authenticate(request, username=username, password=password)
-#
-#         if user is not None:
-#             login(request, user)
-#         else:
-#             messages.info(request, 'Username or password is incorrect!')
-#
-#         context = {'form': self.loginForm}
-#         return render(request, self.template_name, context)
-#
-#
+class LoginUserView(LoginView):
+    permission_classes = {permissions.AllowAny}
+
+    def post(self, request):
+        serializer = AuthTokenSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        login(request, user)
+
+        return Response({
+            "token": AuthToken.objects.create(user)[1],
+            "user": {
+                "id": user.pk,
+                "username": user.username,
+                "email": user.email,
+                "bio": user.bio,
+            }
+        }, status=status.HTTP_200_OK)
+
+
 # class LogoutUserView(View):
 #     def get(self, request):
 #         logout(request)
