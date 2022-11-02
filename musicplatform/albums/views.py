@@ -1,14 +1,29 @@
 from rest_framework.decorators import permission_classes
-from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, permissions
+from rest_framework import status, permissions, generics, viewsets
 from .models import Album
 from .serializers import AlbumSerializer
+from django_filters import rest_framework as filters
 
 # Create your views here.
 
 
-class AlbumView(APIView):
+class AlbumFilter(filters.FilterSet):
+    name = filters.CharFilter(lookup_expr='icontains')
+
+    class Meta:
+        model = Album
+        fields = {
+            'name': ['icontains'],
+            'cost': ['lte', 'gte']
+        }
+
+
+class AlbumViewSet(viewsets.ModelViewSet):
+    queryset = Album.objects.filter(approved=True)
+    serializer_class = AlbumSerializer
+    filterset_class = AlbumFilter
+
     @permission_classes([permissions.AllowAny])
     def get(self, request):
         albums = Album.objects.filter(approved=True)
@@ -16,7 +31,7 @@ class AlbumView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @permission_classes([permissions.IsAuthenticated])
-    def post(self, request):
+    def create(self, request):
         if not hasattr(request.user, 'artist'):
             return Response('This user is not an artist', status=status.HTTP_403_FORBIDDEN)
 
