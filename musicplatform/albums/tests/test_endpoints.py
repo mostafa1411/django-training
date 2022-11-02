@@ -1,8 +1,4 @@
 import pytest
-import pytz
-
-from datetime import datetime
-from decimal import Decimal
 from albums.models import Album
 from artists.models import Artist
 from rest_framework import status
