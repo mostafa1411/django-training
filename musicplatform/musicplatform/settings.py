@@ -165,11 +165,11 @@ REST_FRAMEWORK = {
 
 # Celery Configuration Options
 CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'Africa/Cairo'
-CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CONF_ACCEPT_CONTENT = ['application/json']
+CELERY_CONF_TASK_SERIALIZER = 'json'
+CELERY_CONF_RESULT_SERIALIZER = 'json'
+CELERY_CONF_TIMEZONE = 'Africa/Cairo'
+CELERY_CONF_RESULT_BACKEND = 'django-db'
 
 # Celery beat
 CELERY_BEAT_SCHEDULE = 'django_celery_beat.schedulers:DatabaseScheduler'

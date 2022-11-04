@@ -1,5 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from model_utils.models import TimeStampedModel
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
@@ -19,12 +21,19 @@ class Album(TimeStampedModel):
         return self.name
 
 
+@receiver(post_save, sender=Album)
+def album_post_save(sender, instance, created, *args, **kwargs):
+    if created:
+        from .tasks import send_congratulation_email
+        send_congratulation_email.delay(instance.id, instance.artist.user.id)
+
+
 class Song(models.Model):
     name = models.CharField(max_length=50, blank=True, default='')
     image = models.ImageField(upload_to='images/%y/%m/%d', null=False, blank=False)
     image_thumbnail = ImageSpecField(source='image',
                                      processors=[ResizeToFill(100, 50)],
-                                     format='JPEG',)
+                                     format='JPEG', )
     audio = models.FileField(upload_to='audio/%y/%m/%d', null=False, blank=False)
     album = models.ForeignKey(Album, on_delete=models.CASCADE)
 
