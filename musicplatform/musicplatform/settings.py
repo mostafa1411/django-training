@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os.path
 from pathlib import Path
 import environ
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
     'knox',
     'django_filters',
     'django_celery_beat',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -165,14 +167,19 @@ REST_FRAMEWORK = {
 
 # Celery Configuration Options
 CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'
 CELERY_CONF_ACCEPT_CONTENT = ['application/json']
 CELERY_CONF_TASK_SERIALIZER = 'json'
 CELERY_CONF_RESULT_SERIALIZER = 'json'
 CELERY_CONF_TIMEZONE = 'Africa/Cairo'
 CELERY_CONF_RESULT_BACKEND = 'django-db'
 
-# Celery beat
-CELERY_BEAT_SCHEDULE = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_BEAT_SCHEDULE = {
+    'send-mail-every-day-at-8pm': {
+        'task': 'albums.tasks.send_email_for_inactivity_for_month',
+        'schedule': crontab(hour=20, minute=0),
+    },
+}
 
 # environ settings
 env = environ.Env()
