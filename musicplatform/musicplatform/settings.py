@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os.path
 from pathlib import Path
+import environ
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -45,6 +47,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'knox',
     'django_filters',
+    'django_celery_beat',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -159,3 +163,32 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 100
 }
+
+
+# Celery Configuration Options
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'
+CELERY_CONF_ACCEPT_CONTENT = ['application/json']
+CELERY_CONF_TASK_SERIALIZER = 'json'
+CELERY_CONF_RESULT_SERIALIZER = 'json'
+CELERY_CONF_TIMEZONE = 'Africa/Cairo'
+CELERY_CONF_RESULT_BACKEND = 'django-db'
+
+CELERY_BEAT_SCHEDULE = {
+    'send-mail-every-day-at-8pm': {
+        'task': 'albums.tasks.send_email_for_inactivity_for_month',
+        'schedule': crontab(hour=20, minute=0),
+    },
+}
+
+# environ settings
+env = environ.Env()
+environ.Env.read_env()
+
+# SMTP Settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
