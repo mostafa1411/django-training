@@ -1,10 +1,12 @@
 from django.db import models
 from albums.models import Album
+from users.models import User
 
 
 # Create your models here.
 
 class Artist(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     stage_name = models.CharField(max_length=50, unique=True, null=False, blank=False)
     social_link = models.URLField(max_length=300, null=False, blank=True)
 

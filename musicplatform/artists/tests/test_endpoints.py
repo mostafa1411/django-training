@@ -32,7 +32,9 @@ def test_get_list_of_artists():
     assert len(data) == len(artists)
 
     for i in range(len(data)):
-        assert data[i] == artists[i]
+        assert data[i]['id'] == artists[i]['id']
+        assert data[i]['stage_name'] == artists[i]['stage_name']
+        assert data[i]['social_link'] == artists[i]['social_link']
 
 
 @pytest.mark.django_db
