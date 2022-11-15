@@ -1,0 +1,19 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Artist</title>
+    <link rel="stylesheet" href="{% static 'css/form_style.css' %}">
+</head>
+<body>
+<h1 class="title">Create Artist</h1>
+<form method="post">
+    {% csrf_token %}
+    <p class="error">{{ error }}</p>
+    {{ form }}
+    <input class="submit-btn" type="submit" value="Create">
+</form>
+</body>
+</html>

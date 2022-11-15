@@ -1,0 +1,20 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>REGISTER</title>
+    <link rel="stylesheet" href="{% static 'css/form_style.css' %}">
+</head>
+<body>
+<h1 class="title">Register User</h1>
+<form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+        <p>{{ field.label }} {{ field }}</p>
+    {% endfor %}
+    <input class="submit-btn" type="submit" value="Create User">
+</form>
+</body>
+</html>
