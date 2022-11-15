@@ -17,6 +17,14 @@ class RegistrationSerializer(serializers.ModelSerializer):
         return user
 
     def validate(self, attrs):
+        users = User.objects.all()
+
+        for user in users:
+            if user.username == attrs.get('username'):
+                raise serializers.ValidationError('The username is used by another user')
+            if user.email == attrs.get('email'):
+                raise serializers.ValidationError('The email is used by another user')
+
         if attrs.get('password1') != attrs.get('password2'):
             raise serializers.ValidationError('The passwords does not match.')
 
