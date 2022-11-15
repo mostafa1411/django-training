@@ -1,33 +1,22 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from django.utils.decorators import method_decorator
-from django.views.generic import CreateView
+from rest_framework.views import APIView
+from django.http import JsonResponse
+from rest_framework.response import Response
+from rest_framework import status
 
-from .forms import ArtistForm
 from .models import Artist
-from django.views import View
+from .serializers import ArtistSerializer
 
 # Create your views here.
 
 
-class IndexView(View):
+class ArtistView(APIView):
     def get(self, request):
-        context = {'artists': Artist.objects.all()}
-        return render(request, 'artists/index.html', context)
-
-
-class ArtistCreateView(CreateView):
-    template_name = 'artists/add_artist.html'
-
-    @method_decorator(login_required)
-    def get(self, request):
-        context = {'form': ArtistForm}
-        return render(request, self.template_name, context)
+        artists = Artist.objects.all()
+        serializer = ArtistSerializer(artists, many=True)
+        return JsonResponse(serializer.data, safe=False)
 
     def post(self, request):
-        artist = ArtistForm(request.POST)
-        if artist.is_valid():
-            artist.save()
-
-        context = {'form': ArtistForm}
-        return render(request, self.template_name, context)
+        serializer = ArtistSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
